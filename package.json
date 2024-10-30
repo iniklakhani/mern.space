@@ -7,13 +7,19 @@
     "dev": "nodemon ./src/server.js",
     "format:dry": "prettier . --check",
     "format": "prettier . --write",
+    "lint:dry": "eslint .",
+    "lint": "eslint . --fix",
     "test": ""
   },
   "author": "Nik Lakhani",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.13.0",
+    "@types/eslint__js": "^8.42.3",
     "@types/node": "^22.8.4",
+    "eslint": "^9.13.0",
     "prettier": "3.3.3",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.12.2"
   }
 }
