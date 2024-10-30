@@ -3,4 +3,4 @@ dist
 coverage
 tsconfig.json
 package.json
-package-*.json
+package-lock.json
