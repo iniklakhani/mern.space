@@ -8,5 +8,9 @@
     "test": ""
   },
   "author": "Nik Lakhani",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.8.4",
+    "typescript": "^5.6.3"
+  }
 }
