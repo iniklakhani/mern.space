@@ -5,12 +5,15 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/server.js",
+    "format:dry": "prettier . --check",
+    "format": "prettier . --write",
     "test": ""
   },
   "author": "Nik Lakhani",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^22.8.4",
+    "prettier": "3.3.3",
     "typescript": "^5.6.3"
   }
 }
