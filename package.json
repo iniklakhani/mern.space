@@ -9,15 +9,21 @@
     "format": "prettier . --write",
     "lint:dry": "eslint .",
     "lint": "eslint . --fix",
-    "test": ""
+    "test": "",
+    "prepare": "husky"
   },
   "author": "Nik Lakhani",
   "license": "ISC",
+  "lint-staged": {
+    "*.ts": ["npm run format", "npm run lint"]
+  },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@types/eslint__js": "^8.42.3",
     "@types/node": "^22.8.4",
     "eslint": "^9.13.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "prettier": "3.3.3",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.12.2"
