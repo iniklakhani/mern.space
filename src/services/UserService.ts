@@ -1,5 +1,6 @@
 import createHttpError from 'http-errors'
 import { Repository } from 'typeorm'
+import { Roles } from '../constants'
 import { User } from '../entity/User'
 import { UserData } from '../types'
 
@@ -13,7 +14,7 @@ export class UserService {
         lastName,
         email,
         password,
-        role: 'customer',
+        role: Roles.CUSTOMER,
       })
     } catch {
       const error = createHttpError(500, 'Failed to create user.')
