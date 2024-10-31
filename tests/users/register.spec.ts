@@ -78,6 +78,44 @@ describe('POST /auth/register', () => {
       expect(users[0].lastName).toBe(userData.lastName)
       expect(users[0].email).toBe(userData.email)
     })
+
+    it('should return an ID of the created user', async () => {
+      // Arrange
+      const userData = {
+        firstName: 'John',
+        lastName: 'D',
+        email: 'john.d@localhost',
+        password: 'secret',
+      }
+
+      // Act
+      const response = await request(app).post('/auth/register').send(userData)
+
+      // Assert
+      expect(response.body).toHaveProperty('id')
+      const repository = connection.getRepository(User)
+      const users = await repository.find()
+      expect((response.body as Record<string, string>).id).toBe(users[0].id)
+    })
+
+    it('should assign a customer role', async () => {
+      // Arrange
+      const userData = {
+        firstName: 'John',
+        lastName: 'D',
+        email: 'john.d@localhost',
+        password: 'secret',
+      }
+
+      // Act
+      await request(app).post('/auth/register').send(userData)
+
+      // Assert
+      const userRepository = connection.getRepository(User)
+      const users = await userRepository.find()
+      expect(users[0]).toHaveProperty('role')
+      expect(users[0].role).toBe('customer')
+    })
   })
   describe('Fields are missing', () => {})
 })
