@@ -1,4 +1,5 @@
 import { NextFunction, Response } from 'express'
+import { validationResult } from 'express-validator'
 import { Logger } from 'winston'
 import { UserService } from '../services/UserService'
 import { RegisterUserRequest } from '../types'
@@ -10,15 +11,14 @@ export class AuthController {
   ) {}
 
   async register(req: RegisterUserRequest, res: Response, next: NextFunction) {
+    // Validation
+    const result = validationResult(req)
+    if (!result.isEmpty()) {
+      return res.status(400).json({ errors: result.array() })
+    }
+
+    // Create user
     const { firstName, lastName, email, password } = req.body
-
-    this.logger.debug('New request for user registration', {
-      firstName,
-      lastName,
-      email,
-      password: '*****',
-    })
-
     try {
       const user = await this.userService.create({
         firstName,
