@@ -16,6 +16,7 @@ export default tseslint.config(
       'tests/**',
       '.github',
       '*.js',
+      'scripts/generate-keys.mjs'
     ],
   },
   {
