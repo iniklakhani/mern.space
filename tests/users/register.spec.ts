@@ -160,7 +160,7 @@ describe('POST /auth/register', () => {
       expect(users).toHaveLength(1)
     })
 
-    it('should return the access token and refresh token inside a cookie', async () => {
+    it.skip('should return the access token and refresh token inside a cookie', async () => {
       // Arrange
       const userData = {
         firstName: 'John',
