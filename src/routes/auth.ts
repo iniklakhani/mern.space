@@ -9,9 +9,11 @@ import logger from '../config/logger'
 import { AuthController } from '../controllers/AuthController'
 import { RefreshToken } from '../entity/RefreshToken'
 import { User } from '../entity/User'
+import authenticate from '../middlewares/authenticate'
 import { CredentialService } from '../services/CredentialService'
 import { TokenService } from '../services/TokenService'
 import { UserService } from '../services/UserService'
+import { AuthRequest } from '../types'
 import loginValidator from '../validators/login-validator'
 import registerValidator from '../validators/register-validator'
 
@@ -44,5 +46,13 @@ router.post('/login', loginValidator, (async (
 ) => {
   return await authController.login(req, res, next)
 }) as RequestHandler)
+
+router.get(
+  '/self',
+  (async (req: Request, res: Response, next: NextFunction) => {
+    return await authenticate(req, res, next)
+  }) as RequestHandler,
+  (req: Request, res: Response) => authController.self(req as AuthRequest, res),
+)
 
 export default router

@@ -6,7 +6,7 @@ import { Logger } from 'winston'
 import { CredentialService } from '../services/CredentialService'
 import { TokenService } from '../services/TokenService'
 import { UserService } from '../services/UserService'
-import { RegisterUserRequest } from '../types'
+import { AuthRequest, RegisterUserRequest } from '../types'
 
 export class AuthController {
   constructor(
@@ -132,5 +132,11 @@ export class AuthController {
       next(error)
       return
     }
+  }
+
+  async self(req: AuthRequest, res: Response) {
+    const user = await this.userService.findById(Number(req.auth.sub))
+    res.status(200).json(user)
+    return
   }
 }
