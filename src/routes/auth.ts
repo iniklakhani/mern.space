@@ -10,6 +10,7 @@ import { AuthController } from '../controllers/AuthController'
 import { RefreshToken } from '../entity/RefreshToken'
 import { User } from '../entity/User'
 import authenticate from '../middlewares/authenticate'
+import parseRefreshToken from '../middlewares/parseRefreshToken'
 import validateRefreshToken from '../middlewares/validateRefreshToken'
 import { CredentialService } from '../services/CredentialService'
 import { TokenService } from '../services/TokenService'
@@ -64,5 +65,14 @@ router.post(
   (req: Request, res: Response, next: NextFunction) => {
     return authController.refresh(req as AuthRequest, res, next)
   },
+)
+
+router.post(
+  '/logout',
+  ((req: Request, res: Response, next: NextFunction) => {
+    return parseRefreshToken(req, res, next)
+  }) as RequestHandler,
+  (req: Request, res: Response, next: NextFunction) =>
+    authController.logout(req as AuthRequest, res, next),
 )
 export default router
