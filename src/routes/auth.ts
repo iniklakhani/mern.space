@@ -10,6 +10,7 @@ import { AuthController } from '../controllers/AuthController'
 import { RefreshToken } from '../entity/RefreshToken'
 import { User } from '../entity/User'
 import authenticate from '../middlewares/authenticate'
+import validateRefreshToken from '../middlewares/validateRefreshToken'
 import { CredentialService } from '../services/CredentialService'
 import { TokenService } from '../services/TokenService'
 import { UserService } from '../services/UserService'
@@ -31,28 +32,37 @@ const authController = new AuthController(
   credentialService,
 )
 
-router.post('/register', registerValidator, (async (
+router.post('/register', registerValidator, ((
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  return await authController.register(req, res, next)
+  return authController.register(req, res, next)
 }) as RequestHandler)
 
-router.post('/login', loginValidator, (async (
+router.post('/login', loginValidator, ((
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  return await authController.login(req, res, next)
+  return authController.login(req, res, next)
 }) as RequestHandler)
 
 router.get(
   '/self',
-  (async (req: Request, res: Response, next: NextFunction) => {
-    return await authenticate(req, res, next)
+  ((req: Request, res: Response, next: NextFunction) => {
+    return authenticate(req, res, next)
   }) as RequestHandler,
   (req: Request, res: Response) => authController.self(req as AuthRequest, res),
 )
 
+router.post(
+  '/refresh',
+  ((req: Request, res: Response, next: NextFunction) => {
+    return validateRefreshToken(req, res, next)
+  }) as RequestHandler,
+  (req: Request, res: Response, next: NextFunction) => {
+    return authController.refresh(req as AuthRequest, res, next)
+  },
+)
 export default router
