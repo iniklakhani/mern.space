@@ -17,6 +17,7 @@ export default tseslint.config(
       '.github',
       '*.js',
       'scripts/generate-keys.mjs',
+      'scripts/convertPemToJwk.mjs',
     ],
   },
   {
