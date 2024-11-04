@@ -3,6 +3,7 @@ import { validationResult } from 'express-validator'
 import createHttpError from 'http-errors'
 import { JwtPayload } from 'jsonwebtoken'
 import { Logger } from 'winston'
+import { Roles } from '../constants'
 import { CredentialService } from '../services/CredentialService'
 import { TokenService } from '../services/TokenService'
 import { UserService } from '../services/UserService'
@@ -31,6 +32,7 @@ export class AuthController {
         lastName,
         email,
         password,
+        role: Roles.CUSTOMER,
       })
 
       this.logger.info('User has been registered:', { id: user.id })

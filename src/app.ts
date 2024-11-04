@@ -5,6 +5,7 @@ import 'reflect-metadata'
 import logger from './config/logger'
 import authRouter from './routes/auth'
 import tenantRouter from './routes/tenant'
+import userRouter from './routes/user'
 
 const app = express()
 
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 
 app.use('/auth', authRouter)
 app.use('/tenants', tenantRouter)
+app.use('/users', userRouter)
 
 // Global error handlers which should be after all other middlewares
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
