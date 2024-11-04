@@ -33,4 +33,8 @@ router.post(
   }) as RequestHandler,
 )
 
+router.get('/', (req: Request, res: Response, next: NextFunction) =>
+  tenantController.getAll(req, res, next),
+)
+
 export default router

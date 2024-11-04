@@ -1,4 +1,4 @@
-import { NextFunction, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import { Logger } from 'winston'
 import { TenantService } from '../services/TenantService'
@@ -25,6 +25,15 @@ export class TenantController {
     } catch (error) {
       next(error)
       return
+    }
+  }
+
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const tenants = await this.tenantService.getAll()
+      res.json(tenants)
+    } catch (err) {
+      next(err)
     }
   }
 }
