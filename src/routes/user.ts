@@ -12,6 +12,7 @@ import { User } from '../entity/User'
 import authenticate from '../middlewares/authenticate'
 import { canAccess } from '../middlewares/canAccess'
 import { UserService } from '../services/UserService'
+import { CreateUserRequest } from '../types'
 import createUserValidator from '../validators/create-user-validator'
 
 const router = express.Router()
@@ -27,20 +28,18 @@ router.post(
   }) as RequestHandler,
   canAccess([Roles.ADMIN]),
   createUserValidator,
-  ((req: Request, res: Response, next: NextFunction) => {
+  ((req: CreateUserRequest, res: Response, next: NextFunction) => {
     return userController.create(req, res, next)
   }) as RequestHandler,
 )
 
 router.get(
   '/',
-  ((req: Request, res: Response, next: NextFunction) => {
+  ((req, res, next) => {
     return authenticate(req, res, next)
   }) as RequestHandler,
   canAccess([Roles.ADMIN]),
-  ((req: Request, res: Response, next: NextFunction) => {
-    return userController.getAll(req, res, next)
-  }) as RequestHandler,
+  (req, res, next) => userController.getAll(req, res, next),
 )
 
 export default router

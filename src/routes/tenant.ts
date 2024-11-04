@@ -33,13 +33,9 @@ router.post(
   }) as RequestHandler,
 )
 
-router.get('/', (req: Request, res: Response, next: NextFunction) =>
-  tenantController.getAll(req, res, next),
-)
+router.get('/', (req, res, next) => tenantController.getAll(req, res, next))
 
-router.get('/:id', (req: Request, res: Response, next: NextFunction) =>
-  tenantController.getOne(req, res, next),
-)
+router.get('/:id', (req, res, next) => tenantController.getOne(req, res, next))
 
 router.patch(
   '/:id',

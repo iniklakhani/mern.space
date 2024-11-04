@@ -54,7 +54,7 @@ router.get(
   ((req: Request, res: Response, next: NextFunction) => {
     return authenticate(req, res, next)
   }) as RequestHandler,
-  (req: Request, res: Response) => authController.self(req as AuthRequest, res),
+  (req, res) => authController.self(req as AuthRequest, res),
 )
 
 router.post(
@@ -62,9 +62,7 @@ router.post(
   ((req: Request, res: Response, next: NextFunction) => {
     return validateRefreshToken(req, res, next)
   }) as RequestHandler,
-  (req: Request, res: Response, next: NextFunction) => {
-    return authController.refresh(req as AuthRequest, res, next)
-  },
+  (req, res, next) => authController.refresh(req as AuthRequest, res, next),
 )
 
 router.post(
@@ -72,7 +70,6 @@ router.post(
   ((req: Request, res: Response, next: NextFunction) => {
     return parseRefreshToken(req, res, next)
   }) as RequestHandler,
-  (req: Request, res: Response, next: NextFunction) =>
-    authController.logout(req as AuthRequest, res, next),
+  (req, res, next) => authController.logout(req as AuthRequest, res, next),
 )
 export default router
