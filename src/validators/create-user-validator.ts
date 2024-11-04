@@ -1,4 +1,5 @@
 import { checkSchema } from 'express-validator'
+import { Roles } from '../constants'
 
 export default checkSchema({
   email: {
@@ -30,9 +31,13 @@ export default checkSchema({
       errorMessage: 'Password length should be at least 8 chars.',
     },
   },
-  // role: {
-  //   errorMessage: 'Role is required.',
-  //   notEmpty: true,
-  //   trim: true,
-  // },
+  role: {
+    errorMessage: 'Role is required.',
+    notEmpty: true,
+    trim: true,
+    isIn: {
+      options: [[Roles.CUSTOMER, Roles.MANAGER]],
+      errorMessage: 'Selected role is not allowed.',
+    },
+  },
 })
