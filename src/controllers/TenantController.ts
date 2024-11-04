@@ -47,7 +47,7 @@ export class TenantController {
     }
 
     try {
-      const tenant = await this.tenantService.getOne(Number(tenantId))
+      const tenant = await this.tenantService.getById(Number(tenantId))
       if (!tenant) {
         const error = createHttpError(404, 'Tenant not found.')
         next(error)

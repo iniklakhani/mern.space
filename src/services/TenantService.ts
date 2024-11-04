@@ -12,7 +12,7 @@ export class TenantService {
     return await this.tenantRepo.find()
   }
 
-  async getOne(tenantId: number) {
+  async getById(tenantId: number) {
     return await this.tenantRepo.findOne({ where: { id: tenantId } })
   }
 
