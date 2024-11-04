@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
+import createHttpError from 'http-errors'
 import { Logger } from 'winston'
 import { TenantService } from '../services/TenantService'
 import { CreateTenantRequest } from '../types'
@@ -34,6 +35,29 @@ export class TenantController {
       res.json(tenants)
     } catch (err) {
       next(err)
+    }
+  }
+
+  async getOne(req: Request, res: Response, next: NextFunction) {
+    const tenantId = req.params.id
+    if (isNaN(Number(tenantId))) {
+      const error = createHttpError(400, 'Invalid request.')
+      next(error)
+      return
+    }
+
+    try {
+      const tenant = await this.tenantService.getOne(Number(tenantId))
+      if (!tenant) {
+        const error = createHttpError(404, 'Tenant not found.')
+        next(error)
+        return
+      }
+
+      res.json(tenant)
+    } catch (err) {
+      next(err)
+      return
     }
   }
 }
