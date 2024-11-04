@@ -12,6 +12,7 @@ import { User } from '../entity/User'
 import authenticate from '../middlewares/authenticate'
 import { canAccess } from '../middlewares/canAccess'
 import { UserService } from '../services/UserService'
+import createUserValidator from '../validators/create-user-validator'
 
 const router = express.Router()
 
@@ -25,6 +26,7 @@ router.post(
     return authenticate(req, res, next)
   }) as RequestHandler,
   canAccess([Roles.ADMIN]),
+  createUserValidator,
   ((req: Request, res: Response, next: NextFunction) => {
     return userController.create(req, res, next)
   }) as RequestHandler,
