@@ -13,6 +13,7 @@ import authenticate from '../middlewares/authenticate'
 import { canAccess } from '../middlewares/canAccess'
 import { TenantService } from '../services/TenantService'
 import { CreateTenantRequest } from '../types'
+import tenantValidator from '../validators/tenant-validator'
 
 const router = express.Router()
 
@@ -26,9 +27,10 @@ router.post(
     return authenticate(req, res, next)
   }) as RequestHandler,
   canAccess([Roles.ADMIN]),
-  (req: CreateTenantRequest, res: Response, next: NextFunction) => {
+  tenantValidator,
+  ((req: CreateTenantRequest, res: Response, next: NextFunction) => {
     return tenantController.create(req, res, next)
-  },
+  }) as RequestHandler,
 )
 
 export default router

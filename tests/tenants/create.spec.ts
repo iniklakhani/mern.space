@@ -90,5 +90,25 @@ describe('POST /tenants', () => {
 
       expect(tenants).toHaveLength(0)
     })
+
+    it('should return 400 if tenant name is not provided', async () => {
+      const tenantData = { name: '', address: 'Tenant Address' }
+      const response = await request(app)
+        .post('/tenants')
+        .set('Cookie', [`accessToken=${adminToken}`])
+        .send(tenantData)
+
+      expect(response.statusCode).toBe(400)
+    })
+
+    it('should return 400 if tenant address is not provided', async () => {
+      const tenantData = { name: 'Tenant Name', address: '' }
+      const response = await request(app)
+        .post('/tenants')
+        .set('Cookie', [`accessToken=${adminToken}`])
+        .send(tenantData)
+
+      expect(response.statusCode).toBe(400)
+    })
   })
 })
