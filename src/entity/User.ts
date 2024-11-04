@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
+import { Tenant } from './Tenant'
 
 @Entity({ name: 'users' })
 export class User {
@@ -31,4 +33,7 @@ export class User {
 
   @CreateDateColumn()
   createdAt: number
+
+  @ManyToOne(() => Tenant)
+  tenant: Tenant
 }
