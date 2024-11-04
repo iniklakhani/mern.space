@@ -40,4 +40,14 @@ router.get('/', (req: Request, res: Response, next: NextFunction) =>
 router.get('/:id', (req: Request, res: Response, next: NextFunction) =>
   tenantController.getOne(req, res, next),
 )
+
+router.delete(
+  '/:id',
+  ((req: Request, res: Response, next: NextFunction) => {
+    return authenticate(req, res, next)
+  }) as RequestHandler,
+  canAccess([Roles.ADMIN]),
+  (req, res, next) => tenantController.deleteOne(req, res, next),
+)
+
 export default router

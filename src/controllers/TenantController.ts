@@ -60,4 +60,28 @@ export class TenantController {
       return
     }
   }
+
+  async deleteOne(req: Request, res: Response, next: NextFunction) {
+    const tenantId = req.params.id
+    if (isNaN(Number(tenantId))) {
+      const error = createHttpError(400, 'Invalid request.')
+      next(error)
+      return
+    }
+
+    try {
+      const tenant = await this.tenantService.deleteById(Number(tenantId))
+      if (!tenant.affected) {
+        const error = createHttpError(404, 'Tenant not found.')
+        next(error)
+        return
+      }
+
+      this.logger.info('Tenant has been deleted', { id: Number(tenantId) })
+      res.json({ id: Number(tenantId) })
+    } catch (err) {
+      next(err)
+      return
+    }
+  }
 }
