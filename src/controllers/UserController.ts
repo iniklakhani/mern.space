@@ -95,4 +95,26 @@ export class UserController {
       return
     }
   }
+
+  async deleteOne(req: Request, res: Response, next: NextFunction) {
+    const userId = req.params.id
+    if (isNaN(Number(userId))) {
+      const error = createHttpError(400, 'Invalid request.')
+      next(error)
+      return
+    }
+
+    try {
+      const user = await this.userService.deleteById(Number(userId))
+      if (!user.affected) {
+        next(createHttpError(404, 'User not found.'))
+        return
+      }
+
+      res.json({ id: Number(userId) })
+    } catch (error) {
+      next(error)
+      return
+    }
+  }
 }
