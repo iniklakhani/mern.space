@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
+import createHttpError from 'http-errors'
 import { Logger } from 'winston'
 import { Roles } from '../constants'
 import { UserService } from '../services/UserService'
@@ -39,6 +40,28 @@ export class UserController {
     try {
       const users = await this.userService.getAll()
       res.json(users)
+    } catch (error) {
+      next(error)
+      return
+    }
+  }
+
+  async getOne(req: Request, res: Response, next: NextFunction) {
+    const userId = req.params.id
+    if (isNaN(Number(userId))) {
+      const error = createHttpError(400, 'Invalid request.')
+      next(error)
+      return
+    }
+
+    try {
+      const user = await this.userService.getById(Number(userId))
+      if (!user) {
+        next(createHttpError(404, 'User not found.'))
+        return
+      }
+
+      res.json(user)
     } catch (error) {
       next(error)
       return
