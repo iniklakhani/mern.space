@@ -61,6 +61,35 @@ export class TenantController {
     }
   }
 
+  async update(req: CreateTenantRequest, res: Response, next: NextFunction) {
+    const result = validationResult(req)
+    if (!result.isEmpty()) {
+      return res.status(400).json({ errors: result.array() })
+    }
+
+    const { name, address } = req.body
+    const tenantId = req.params.id
+
+    if (isNaN(Number(tenantId))) {
+      next(createHttpError(400, 'Invalid request.'))
+      return
+    }
+
+    try {
+      await this.tenantService.update(Number(tenantId), {
+        name,
+        address,
+      })
+
+      this.logger.info('Tenant has been updated.', { id: tenantId })
+
+      res.json({ id: Number(tenantId) })
+    } catch (error) {
+      next(error)
+      return
+    }
+  }
+
   async deleteOne(req: Request, res: Response, next: NextFunction) {
     const tenantId = req.params.id
     if (isNaN(Number(tenantId))) {

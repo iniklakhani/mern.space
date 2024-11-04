@@ -41,6 +41,18 @@ router.get('/:id', (req: Request, res: Response, next: NextFunction) =>
   tenantController.getOne(req, res, next),
 )
 
+router.patch(
+  '/:id',
+  ((req: Request, res: Response, next: NextFunction) => {
+    return authenticate(req, res, next)
+  }) as RequestHandler,
+  canAccess([Roles.ADMIN]),
+  tenantValidator,
+  ((req: CreateTenantRequest, res: Response, next: NextFunction) => {
+    return tenantController.update(req, res, next)
+  }) as RequestHandler,
+)
+
 router.delete(
   '/:id',
   ((req: Request, res: Response, next: NextFunction) => {
