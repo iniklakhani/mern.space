@@ -1,4 +1,4 @@
-import { NextFunction, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import { Logger } from 'winston'
 import { Roles } from '../constants'
@@ -29,6 +29,16 @@ export class UserController {
       })
 
       res.status(201).json({ id: user.id })
+    } catch (error) {
+      next(error)
+      return
+    }
+  }
+
+  async getAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const users = await this.userService.getAll()
+      res.json(users)
     } catch (error) {
       next(error)
       return

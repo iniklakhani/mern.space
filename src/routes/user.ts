@@ -32,4 +32,15 @@ router.post(
   }) as RequestHandler,
 )
 
+router.get(
+  '/',
+  ((req: Request, res: Response, next: NextFunction) => {
+    return authenticate(req, res, next)
+  }) as RequestHandler,
+  canAccess([Roles.ADMIN]),
+  ((req: Request, res: Response, next: NextFunction) => {
+    return userController.getAll(req, res, next)
+  }) as RequestHandler,
+)
+
 export default router
