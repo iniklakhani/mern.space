@@ -12,8 +12,9 @@ import { User } from '../entity/User'
 import authenticate from '../middlewares/authenticate'
 import { canAccess } from '../middlewares/canAccess'
 import { UserService } from '../services/UserService'
-import { CreateUserRequest } from '../types'
+import { CreateUserRequest, UpdateUserRequest } from '../types'
 import createUserValidator from '../validators/create-user-validator'
+import updateUserValidator from '../validators/update-user-validator'
 
 const router = express.Router()
 
@@ -49,6 +50,18 @@ router.get(
   }) as RequestHandler,
   canAccess([Roles.ADMIN]),
   (req, res, next) => userController.getOne(req, res, next),
+)
+
+router.patch(
+  '/:id',
+  ((req, res, next) => {
+    return authenticate(req, res, next)
+  }) as RequestHandler,
+  canAccess([Roles.ADMIN]),
+  updateUserValidator,
+  ((req: UpdateUserRequest, res: Response, next: NextFunction) => {
+    return userController.update(req, res, next)
+  }) as RequestHandler,
 )
 
 export default router

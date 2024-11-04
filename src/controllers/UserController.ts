@@ -4,7 +4,7 @@ import createHttpError from 'http-errors'
 import { Logger } from 'winston'
 import { Roles } from '../constants'
 import { UserService } from '../services/UserService'
-import { CreateUserRequest } from '../types'
+import { CreateUserRequest, UpdateUserRequest } from '../types'
 
 export class UserController {
   constructor(
@@ -62,6 +62,35 @@ export class UserController {
       }
 
       res.json(user)
+    } catch (error) {
+      next(error)
+      return
+    }
+  }
+
+  async update(req: UpdateUserRequest, res: Response, next: NextFunction) {
+    // currently, we don't allow to change the email address
+    const result = validationResult(req)
+    if (!result.isEmpty()) {
+      return res.status(400).json({ errors: result.array() })
+    }
+
+    const { firstName, lastName, role } = req.body
+    const userId = req.params.id
+
+    if (isNaN(Number(userId))) {
+      next(createHttpError(400, 'Invalid request.'))
+      return
+    }
+
+    try {
+      await this.userService.update(Number(userId), {
+        firstName,
+        lastName,
+        role,
+      })
+
+      res.json({ id: Number(userId) })
     } catch (error) {
       next(error)
       return
