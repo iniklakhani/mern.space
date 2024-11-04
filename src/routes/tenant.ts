@@ -6,9 +6,11 @@ import express, {
 } from 'express'
 import { AppDataSource } from '../config/data-source'
 import logger from '../config/logger'
+import { Roles } from '../constants'
 import { TenantController } from '../controllers/TenantController'
 import { Tenant } from '../entity/Tenant'
 import authenticate from '../middlewares/authenticate'
+import { canAccess } from '../middlewares/canAccess'
 import { TenantService } from '../services/TenantService'
 import { CreateTenantRequest } from '../types'
 
@@ -23,6 +25,7 @@ router.post(
   ((req: Request, res: Response, next: NextFunction) => {
     return authenticate(req, res, next)
   }) as RequestHandler,
+  canAccess([Roles.ADMIN]),
   (req: CreateTenantRequest, res: Response, next: NextFunction) => {
     return tenantController.create(req, res, next)
   },
