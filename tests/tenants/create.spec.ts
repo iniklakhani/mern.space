@@ -72,7 +72,7 @@ describe('POST /tenants', () => {
       expect(tenants).toHaveLength(0)
     })
 
-    it('should return 403 if user is not an admin', async () => {
+    it('should return 403 if user is non an admin', async () => {
       const managerToken = jwks.token({
         sub: '1',
         role: Roles.MANAGER,
