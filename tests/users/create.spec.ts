@@ -120,5 +120,54 @@ describe('POST /users', () => {
       expect(response.statusCode).toBe(403)
       expect(users).toHaveLength(0)
     })
+
+    it('should return list of users to be 1', async () => {
+      // Register an user
+      const userData = {
+        firstName: 'John',
+        lastName: 'D',
+        email: 'john.d@local.host',
+        password: 'password',
+      }
+
+      const userRepository = connection.getRepository(User)
+      const user = await userRepository.save({
+        ...userData,
+        role: Roles.ADMIN,
+      })
+
+      // Add token to cookie
+      const response = await request(app)
+        .get('/users')
+        .set('Cookie', [`accessToken=${adminToken};`])
+        .send()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toHaveLength(1)
+    })
+
+    it('should return single user by Id', async () => {
+      // Register an user
+      const userData = {
+        firstName: 'John',
+        lastName: 'D',
+        email: 'john.d@local.host',
+        password: 'password',
+      }
+
+      const userRepository = connection.getRepository(User)
+      const user = await userRepository.save({
+        ...userData,
+        role: Roles.CUSTOMER,
+      })
+
+      // Add token to cookie
+      const response = await request(app)
+        .get(`/users/${user.id}`)
+        .set('Cookie', [`accessToken=${adminToken};`])
+        .send()
+
+      expect(response.statusCode).toBe(200)
+    })
   })
 })

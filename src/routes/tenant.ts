@@ -23,46 +23,37 @@ const tenantController = new TenantController(tenantService, logger)
 
 router.post(
   '/',
-  ((req: Request, res: Response, next: NextFunction) => {
-    return authenticate(req, res, next)
-  }) as RequestHandler,
+  authenticate as RequestHandler,
   canAccess([Roles.ADMIN]),
   tenantValidator,
-  ((req: CreateTenantRequest, res: Response, next: NextFunction) => {
-    return tenantController.create(req, res, next)
-  }) as RequestHandler,
+  ((req: CreateTenantRequest, res: Response, next: NextFunction) =>
+    tenantController.create(req, res, next)) as RequestHandler,
 )
 
-router.get('/', (req, res, next) => tenantController.getAll(req, res, next))
+router.get('/', ((req: Request, res: Response, next: NextFunction) =>
+  tenantController.getAll(req, res, next)) as RequestHandler)
 
-router.get(
-  '/:id',
-  ((req: Request, res: Response, next: NextFunction) => {
-    return authenticate(req, res, next)
-  }) as RequestHandler,
-  canAccess([Roles.ADMIN]),
-  (req, res, next) => tenantController.getOne(req, res, next),
-)
+router.get('/:id', authenticate as RequestHandler, canAccess([Roles.ADMIN]), ((
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => tenantController.getOne(req, res, next)) as RequestHandler)
 
 router.patch(
   '/:id',
-  ((req: Request, res: Response, next: NextFunction) => {
-    return authenticate(req, res, next)
-  }) as RequestHandler,
+  authenticate as RequestHandler,
   canAccess([Roles.ADMIN]),
   tenantValidator,
-  ((req: CreateTenantRequest, res: Response, next: NextFunction) => {
-    return tenantController.update(req, res, next)
-  }) as RequestHandler,
+  ((req: CreateTenantRequest, res: Response, next: NextFunction) =>
+    tenantController.update(req, res, next)) as RequestHandler,
 )
 
 router.delete(
   '/:id',
-  ((req: Request, res: Response, next: NextFunction) => {
-    return authenticate(req, res, next)
-  }) as RequestHandler,
+  authenticate as RequestHandler,
   canAccess([Roles.ADMIN]),
-  (req, res, next) => tenantController.deleteOne(req, res, next),
+  ((req: Request, res: Response, next: NextFunction) =>
+    tenantController.deleteOne(req, res, next)) as RequestHandler,
 )
 
 export default router
