@@ -83,7 +83,7 @@ export class AuthController {
     const { email, password } = req.body
     try {
       // Check if username (email) exists in the database
-      const user = await this.userService.findByEmail(email)
+      const user = await this.userService.findByEmailWithPassword(email)
       if (!user) {
         const error = createHttpError(400, 'Email or password does not match.')
         next(error)

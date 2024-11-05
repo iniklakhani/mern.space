@@ -55,13 +55,15 @@ describe('POST /users', () => {
 
       // Assert
       const userRepo = connection.getRepository(User)
-      const users = await userRepo.find()
+      const users = await userRepo.find({ select: ['email'] })
 
       expect(users).toHaveLength(1)
       expect(users[0].email).toBe(userData.email)
     })
 
     it('should create a manager user', async () => {
+      const tenant = await createTenant(connection.getRepository(Tenant))
+
       // Register an user
       const userData = {
         firstName: 'John',
