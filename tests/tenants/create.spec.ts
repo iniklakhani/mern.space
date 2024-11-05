@@ -110,5 +110,21 @@ describe('POST /tenants', () => {
 
       expect(response.statusCode).toBe(400)
     })
+
+    it('should return 200 while getting single tenant by Id', async () => {
+      const tenantData = { name: 'Tenant Name', address: 'Tenant Address' }
+      const response = await request(app)
+        .post('/tenants')
+        .set('Cookie', [`accessToken=${adminToken}`])
+        .send(tenantData)
+      const newTenantId = response.body.id
+
+      const newTenant = await request(app)
+        .get(`/tenants/${newTenantId}`)
+        .set('Cookie', [`accessToken=${adminToken}`])
+
+      expect(newTenant.statusCode).toBe(200)
+      expect(newTenant.body.id).toBe(newTenantId)
+    })
   })
 })
