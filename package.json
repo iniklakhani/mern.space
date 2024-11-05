@@ -5,6 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "dev": "cross-env NODE_ENV=dev nodemon ./src/server.ts",
+    "build": "tsc",
     "format:dry": "prettier . --check",
     "format": "prettier . --write",
     "lint:dry": "eslint .",
