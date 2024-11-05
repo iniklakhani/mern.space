@@ -14,6 +14,7 @@ export default tseslint.config(
       'eslint.config.mjs',
       'jest.config.js',
       'tests/**',
+      'coverage/**',
       '.github',
       '*.js',
       'scripts/generate-keys.mjs',
