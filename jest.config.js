@@ -5,7 +5,6 @@ module.exports = {
     '^.+.tsx?$': ['ts-jest', {}],
   },
   verbose: true,
-  preset: 'ts-jest',
   collectCoverage: true,
   coverageProvider: 'v8',
   collectCoverageFrom: [
