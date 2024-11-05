@@ -4,7 +4,9 @@ import { DataSource } from 'typeorm'
 import app from '../../src/app'
 import { AppDataSource } from '../../src/config/data-source'
 import { Roles } from '../../src/constants'
+import { Tenant } from '../../src/entity/Tenant'
 import { User } from '../../src/entity/User'
+import { createTenant } from '../utils/index'
 
 describe('POST /users', () => {
   let connection: DataSource
@@ -38,13 +40,16 @@ describe('POST /users', () => {
 
   describe('Given all fields', () => {
     it('should persist the user in the database', async () => {
+      const tenant = await createTenant(connection.getRepository(Tenant))
+
       // Register an user
       const userData = {
         firstName: 'John',
         lastName: 'D',
         email: 'john.d@local.host',
         password: 'password',
-        tenantId: 1,
+        tenantId: tenant.id,
+        role: Roles.MANAGER,
       }
 
       // Add token to cookie
@@ -70,7 +75,8 @@ describe('POST /users', () => {
         lastName: 'D',
         email: 'john.d@local.host',
         password: 'password',
-        tenantId: 1,
+        tenantId: tenant.id,
+        role: Roles.MANAGER,
       }
 
       // Add token to cookie
@@ -88,24 +94,31 @@ describe('POST /users', () => {
     })
 
     it('should return 403 if non admin user tries to create an user', async () => {
+      const nonAdminToken = jwks.token({
+        sub: '1',
+        role: Roles.MANAGER,
+      })
+
       // Register an user
       const userData = {
         firstName: 'John',
         lastName: 'D',
         email: 'john.d@local.host',
         password: 'password',
+        tenantId: 1,
       }
-      const userRepository = connection.getRepository(User)
-      await userRepository.save({
-        ...userData,
-        role: Roles.CUSTOMER,
-      })
 
       // Add token to cookie
-      const response = await request(app).get('/auth/self').send()
+      const response = await request(app)
+        .post('/users')
+        .set('Cookie', [`accessToken=${nonAdminToken}`])
+        .send()
 
       // Assert
-      expect(response.statusCode).toBe(401)
+      const userRepository = connection.getRepository(User)
+      const users = await userRepository.find()
+      expect(response.statusCode).toBe(403)
+      expect(users).toHaveLength(0)
     })
   })
 })
