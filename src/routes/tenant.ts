@@ -35,7 +35,14 @@ router.post(
 
 router.get('/', (req, res, next) => tenantController.getAll(req, res, next))
 
-router.get('/:id', (req, res, next) => tenantController.getOne(req, res, next))
+router.get(
+  '/:id',
+  ((req: Request, res: Response, next: NextFunction) => {
+    return authenticate(req, res, next)
+  }) as RequestHandler,
+  canAccess([Roles.ADMIN]),
+  (req, res, next) => tenantController.getOne(req, res, next),
+)
 
 router.patch(
   '/:id',
