@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import request from 'supertest'
 import { DataSource } from 'typeorm'
 import app from '../../src/app'
