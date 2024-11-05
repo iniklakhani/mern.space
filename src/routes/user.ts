@@ -24,53 +24,40 @@ const userController = new UserController(userService, logger)
 
 router.post(
   '/',
-  ((req: Request, res: Response, next: NextFunction) => {
-    return authenticate(req, res, next)
-  }) as RequestHandler,
+  authenticate as RequestHandler,
   canAccess([Roles.ADMIN]),
   createUserValidator,
-  ((req: CreateUserRequest, res: Response, next: NextFunction) => {
-    return userController.create(req, res, next)
-  }) as RequestHandler,
+  ((req: CreateUserRequest, res: Response, next: NextFunction) =>
+    userController.create(req, res, next)) as RequestHandler,
 )
 
-router.get(
-  '/',
-  ((req, res, next) => {
-    return authenticate(req, res, next)
-  }) as RequestHandler,
-  canAccess([Roles.ADMIN]),
-  (req, res, next) => userController.getAll(req, res, next),
-)
+router.get('/', authenticate as RequestHandler, canAccess([Roles.ADMIN]), ((
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => userController.getAll(req, res, next)) as RequestHandler)
 
-router.get(
-  '/:id',
-  ((req, res, next) => {
-    return authenticate(req, res, next)
-  }) as RequestHandler,
-  canAccess([Roles.ADMIN]),
-  (req, res, next) => userController.getOne(req, res, next),
-)
+router.get('/:id', authenticate as RequestHandler, canAccess([Roles.ADMIN]), ((
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => userController.getOne(req, res, next)) as RequestHandler)
 
 router.patch(
   '/:id',
-  ((req, res, next) => {
-    return authenticate(req, res, next)
-  }) as RequestHandler,
+  authenticate as RequestHandler,
   canAccess([Roles.ADMIN]),
   updateUserValidator,
-  ((req: UpdateUserRequest, res: Response, next: NextFunction) => {
-    return userController.update(req, res, next)
-  }) as RequestHandler,
+  ((req: UpdateUserRequest, res: Response, next: NextFunction) =>
+    userController.update(req, res, next)) as RequestHandler,
 )
 
 router.delete(
   '/:id',
-  ((req, res, next) => {
-    return authenticate(req, res, next)
-  }) as RequestHandler,
+  authenticate as RequestHandler,
   canAccess([Roles.ADMIN]),
-  (req, res, next) => userController.deleteOne(req, res, next),
+  ((req: Request, res: Response, next: NextFunction) =>
+    userController.deleteOne(req, res, next)) as RequestHandler,
 )
 
 export default router

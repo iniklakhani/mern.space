@@ -37,39 +37,25 @@ router.post('/register', registerValidator, ((
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
-  return authController.register(req, res, next)
-}) as RequestHandler)
+) => authController.register(req, res, next)) as RequestHandler)
 
 router.post('/login', loginValidator, ((
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
-  return authController.login(req, res, next)
-}) as RequestHandler)
+) => authController.login(req, res, next)) as RequestHandler)
 
-router.get(
-  '/self',
-  ((req: Request, res: Response, next: NextFunction) => {
-    return authenticate(req, res, next)
-  }) as RequestHandler,
-  (req, res) => authController.self(req as AuthRequest, res),
+router.get('/self', authenticate as RequestHandler, (req, res) =>
+  authController.self(req as AuthRequest, res),
 )
 
 router.post(
   '/refresh',
-  ((req: Request, res: Response, next: NextFunction) => {
-    return validateRefreshToken(req, res, next)
-  }) as RequestHandler,
+  validateRefreshToken as RequestHandler,
   (req, res, next) => authController.refresh(req as AuthRequest, res, next),
 )
 
-router.post(
-  '/logout',
-  ((req: Request, res: Response, next: NextFunction) => {
-    return parseRefreshToken(req, res, next)
-  }) as RequestHandler,
-  (req, res, next) => authController.logout(req as AuthRequest, res, next),
+router.post('/logout', parseRefreshToken as RequestHandler, (req, res, next) =>
+  authController.logout(req as AuthRequest, res, next),
 )
 export default router
