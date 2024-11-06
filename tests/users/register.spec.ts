@@ -164,7 +164,7 @@ describe('POST /auth/register', () => {
       expect(users).toHaveLength(1)
     })
 
-    it.skip('should return the access token and refresh token inside a cookie', async () => {
+    it('should return the access token and refresh token inside a cookie', async () => {
       // Arrange
       const userData = {
         firstName: 'John',
@@ -172,8 +172,6 @@ describe('POST /auth/register', () => {
         email: 'john.d@local.host',
         password: 'password',
       }
-      const userRepository = connection.getRepository(User)
-      await userRepository.save({ ...userData, role: Roles.CUSTOMER })
 
       // Act
       const response = await request(app).post('/auth/register').send(userData)
