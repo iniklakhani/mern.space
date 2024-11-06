@@ -2,8 +2,8 @@ import app from './app'
 import { Config } from './config'
 import { AppDataSource } from './config/data-source'
 import logger from './config/logger'
-import { Roles } from './constants'
 import { User } from './entity/User'
+import { UserService } from './services/UserService'
 
 const startServer = async () => {
   const PORT = Config.PORT
@@ -13,16 +13,10 @@ const startServer = async () => {
 
     // START: Create an admin user
     const userRepo = connection.getRepository(User)
-    const isAdminExist = await userRepo.find({ where: { role: Roles.ADMIN } })
-    if (!isAdminExist.length) {
-      const admin = await userRepo.save({
-        firstName: Config.ADMIN_FIRST_NAME,
-        lastName: Config.ADMIN_LAST_NAME,
-        email: Config.ADMIN_EMAIL,
-        password: Config.ADMIN_PASSWORD,
-        role: Roles.ADMIN,
-      })
-      logger.info('Admin user created successfully.', { id: admin.id })
+    const userServier = new UserService(userRepo)
+    const adminId = await userServier.createAdminUser()
+    if (adminId) {
+      logger.info('Admin user created successfully.', { id: adminId })
     }
     // END: Create an admin user
 

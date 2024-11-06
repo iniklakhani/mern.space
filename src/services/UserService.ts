@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs'
 import createHttpError from 'http-errors'
 import { Repository } from 'typeorm'
+import { Config } from '../config'
+import { Roles } from '../constants'
 import { User } from '../entity/User'
 import { LimitedUserData, UserData } from '../types'
 
@@ -77,5 +79,36 @@ export class UserService {
 
   async deleteById(userId: number) {
     return await this.userRepository.delete(userId)
+  }
+
+  async createAdminUser() {
+    try {
+      const isAdminExist = await this.userRepository.findOne({
+        where: { email: Config.ADMIN_EMAIL },
+      })
+
+      if (!isAdminExist) {
+        const saltRounds = 10
+        const hashedPassword = await bcrypt.hash(
+          Config.ADMIN_PASSWORD!,
+          saltRounds,
+        )
+
+        const admin = await this.userRepository.save({
+          firstName: Config.ADMIN_FIRST_NAME,
+          lastName: Config.ADMIN_LAST_NAME,
+          email: Config.ADMIN_EMAIL,
+          password: hashedPassword,
+          role: Roles.ADMIN,
+        })
+
+        return admin.id
+      }
+
+      return null
+    } catch {
+      const error = createHttpError(500, 'Failed to create an admin user')
+      throw error
+    }
   }
 }

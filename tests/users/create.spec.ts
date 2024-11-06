@@ -5,8 +5,9 @@ import app from '../../src/app'
 import { AppDataSource } from '../../src/config/data-source'
 import { Roles } from '../../src/constants'
 import { Tenant } from '../../src/entity/Tenant'
-import { User } from '../../src/entity/User'
+import { UserService } from '../../src/services/UserService'
 import { createTenant } from '../utils/index'
+import { User } from './../../src/entity/User'
 
 describe('POST /users', () => {
   let connection: DataSource
@@ -39,6 +40,25 @@ describe('POST /users', () => {
   })
 
   describe('Given all fields', () => {
+    it('should return created admin id on initial server start', async () => {
+      const userRepo = connection.getRepository(User)
+      const userService = new UserService(userRepo)
+
+      const response = await userService.createAdminUser()
+      expect(response).toBe(1)
+    })
+
+    it('should return null on initial server start when admin has already been created', async () => {
+      const userRepo = connection.getRepository(User)
+      const userService = new UserService(userRepo)
+
+      const response = await userService.createAdminUser()
+      expect(response).toBe(1)
+
+      const createAgain = await userService.createAdminUser()
+      expect(createAgain).toBeNull()
+    })
+
     it('should persist the user in the database', async () => {
       const tenant = await createTenant(connection.getRepository(Tenant))
 
