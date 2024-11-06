@@ -189,5 +189,32 @@ describe('POST /users', () => {
 
       expect(response.statusCode).toBe(200)
     })
+
+    it('should update the user and return the Id', async () => {
+      // Register an user
+      const userData = {
+        firstName: 'John',
+        lastName: 'D',
+        email: 'john.customer@local.host',
+        password: 'password',
+        role: Roles.CUSTOMER,
+      }
+      const userRepo = connection.getRepository(User)
+      const user = await userRepo.save(userData)
+
+      // Add token to cookie
+      const updated = await request(app)
+        .patch(`/users/${user.id}`)
+        .set('Cookie', [`accessToken=${adminToken}`])
+        .send({
+          firstName: 'I am John',
+          lastName: 'Doe',
+          role: Roles.MANAGER,
+        })
+
+      // Assert
+      expect(updated.statusCode).toBe(200)
+      expect(updated.body).toHaveProperty('id')
+    })
   })
 })
