@@ -216,5 +216,28 @@ describe('POST /users', () => {
       expect(updated.statusCode).toBe(200)
       expect(updated.body).toHaveProperty('id')
     })
+
+    it('should delete the user and return the Id', async () => {
+      // Register an user
+      const userData = {
+        firstName: 'John',
+        lastName: 'D',
+        email: 'john.customer@local.host',
+        password: 'password',
+        role: Roles.CUSTOMER,
+      }
+      const userRepo = connection.getRepository(User)
+      const user = await userRepo.save(userData)
+
+      // Add token to cookie
+      const deleted = await request(app)
+        .delete(`/users/${user.id}`)
+        .set('Cookie', [`accessToken=${adminToken}`])
+        .send()
+
+      // Assert
+      expect(deleted.statusCode).toBe(200)
+      expect(deleted.body).toHaveProperty('id')
+    })
   })
 })
