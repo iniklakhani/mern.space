@@ -13,4 +13,5 @@ module.exports = {
   collectCoverage: true,
   coverageProvider: 'v8',
   collectCoverageFrom: ['src/**/*.ts', '!tests/**', '!**node_modules/**'],
+  coveragePathIgnorePatterns: ['node_modules', 'dist', 'build', 'migration'],
 }
