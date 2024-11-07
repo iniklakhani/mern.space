@@ -6,7 +6,7 @@ import { AppDataSource } from '../../src/config/data-source'
 import { Roles } from '../../src/constants'
 import { User } from '../../src/entity/User'
 
-describe('GET /auth/self', () => {
+describe('GET /auth', () => {
   let connection: DataSource
   let jwks: ReturnType<typeof createJWKMock>
 
@@ -121,6 +121,56 @@ describe('GET /auth/self', () => {
 
       // Assert
       expect(response.statusCode).toBe(401)
+    })
+
+    it('should return user id after validation refresh token', async () => {
+      // Register an user
+      const userData = {
+        firstName: 'John',
+        lastName: 'D',
+        email: 'john.d@local.host',
+        password: 'password',
+      }
+
+      const userRegistered = await request(app)
+        .post('/auth/register')
+        .send(userData)
+      expect(userRegistered.statusCode).toBe(201)
+
+      // Do login to get the refresh & access token
+      const response = await request(app).post('/auth/login').send({
+        email: userData.email,
+        password: userData.password,
+      })
+
+      interface Headers {
+        ['set-cookie']: string[]
+      }
+      let accessToken = ''
+      let refreshToken = ''
+      const cookies =
+        (response.headers as unknown as Headers)['set-cookie'] || []
+
+      cookies.forEach((cookie) => {
+        if (cookie.startsWith('accessToken=')) {
+          accessToken = cookie.split(';')[0].split('=')[1]
+        }
+        if (cookie.startsWith('refreshToken=')) {
+          refreshToken = cookie.split(';')[0].split('=')[1]
+        }
+      })
+
+      // call /auth/refresh
+      const getNewToken = await request(app)
+        .post('/auth/refresh')
+        .set('Cookie', [
+          `accessToken=${accessToken}`,
+          `refreshToken=${refreshToken}`,
+        ])
+        .send({})
+
+      expect(getNewToken.statusCode).toBe(200)
+      expect(getNewToken.body).toHaveProperty('id')
     })
   })
 })
