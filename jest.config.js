@@ -13,5 +13,12 @@ module.exports = {
   collectCoverage: true,
   coverageProvider: 'v8',
   collectCoverageFrom: ['src/**/*.ts', '!tests/**', '!**node_modules/**'],
-  coveragePathIgnorePatterns: ['node_modules', 'dist', 'build', 'migration', 'scripts'],
+  coveragePathIgnorePatterns: [
+    'node_modules',
+    'dist',
+    'build',
+    'migration',
+    'scripts',
+    'src/server.ts'
+  ],
 }
