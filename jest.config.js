@@ -19,6 +19,6 @@ module.exports = {
     'build',
     'migration',
     'scripts',
-    'src/server.ts'
+    'src/server.ts',
   ],
 }
