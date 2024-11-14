@@ -1,14 +1,22 @@
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import express, { NextFunction, Request, Response } from 'express'
 import { HttpError } from 'http-errors'
 import 'reflect-metadata'
+
+import { Config } from './config'
 import logger from './config/logger'
 import authRouter from './routes/auth'
 import tenantRouter from './routes/tenant'
 import userRouter from './routes/user'
 
 const app = express()
-
+app.use(
+  cors({
+    origin: [Config.FRONT_END_URL!],
+    credentials: true,
+  }),
+)
 app.use(express.static('public'))
 app.use(cookieParser())
 app.use(express.json())
