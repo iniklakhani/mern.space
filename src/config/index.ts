@@ -20,6 +20,7 @@ const {
   ADMIN_LAST_NAME,
   ADMIN_EMAIL,
   ADMIN_PASSWORD,
+  FRONT_END_URL,
 } = process.env
 
 export const Config = {
@@ -37,4 +38,5 @@ export const Config = {
   ADMIN_LAST_NAME,
   ADMIN_EMAIL,
   ADMIN_PASSWORD,
+  FRONT_END_URL,
 }
